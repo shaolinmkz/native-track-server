@@ -7,7 +7,9 @@ const router = Router();
 
 router.post("/signup", (req, res) => {
   const { email, password } = req.body;
-  const encryptedPassword = bcrypt.hashSync(password, 10);
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const encryptedPassword = bcrypt.hashSync(password, salt);
   const User = mongoose.model("User");
   const user = new User({ email, password: encryptedPassword });
   user
