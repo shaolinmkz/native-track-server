@@ -17,8 +17,6 @@ const app = express();
 app.use(cors());
 app.use(logger("dev"));
 app.use(bodyParser.json());
-app.use(authRoute);
-app.use(requireAuth, trackRoute);
 
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
@@ -36,6 +34,9 @@ mongoose.connection.on("error", (err) => {
 app.get("/", (req, res) => {
   res.json({ data: "Welcome to native tracker server" });
 });
+
+app.use(authRoute);
+app.use(requireAuth, trackRoute);
 
 app.use("*", (req, res) => {
   res.json({ data: "Not found" });
