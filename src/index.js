@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const logger = require("morgan");
 const authRoute = require("./routes/authRouter");
 const trackRoute = require("./routes/trackRouter");
 const requireAuth = require("./middlewares/requireAuth");
+
 require("./models");
 
 dotenv.config();
@@ -13,6 +15,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
+app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(authRoute);
 app.use(requireAuth, trackRoute);
