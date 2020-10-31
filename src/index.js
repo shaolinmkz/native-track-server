@@ -18,10 +18,15 @@ app.use(cors());
 app.use(logger("dev"));
 app.use(bodyParser.json());
 
-mongoose.connect(process.env.CONNECTION_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-});
+const { CONNECTION_URI_DEV, CONNECTION_URI_PROD, NODE_ENV } = process.env;
+
+mongoose.connect(
+  NODE_ENV === "production" ? CONNECTION_URI_PROD : CONNECTION_URI_DEV,
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+  }
+);
 
 mongoose.connection.on("connected", () => {
   console.log("Connected to the mongoDB instance");
