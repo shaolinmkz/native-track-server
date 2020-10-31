@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const authRoute = require("./routes/authRouter");
+const trackRoute = require("./routes/trackRouter");
 const requireAuth = require("./middlewares/requireAuth");
 require("./models");
 
@@ -14,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(authRoute);
+app.use(requireAuth, trackRoute);
 
 mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
@@ -28,9 +30,8 @@ mongoose.connection.on("error", (err) => {
   console.log("Error connecting to mongoDB", err);
 });
 
-app.get("/", requireAuth, (req, res) => {
-  const { email } = req.user;
-  res.json({ data: "Welcome to native tracker server", email });
+app.get("/", (req, res) => {
+  res.json({ data: "Welcome to native tracker server" });
 });
 
 app.use("*", (req, res) => {

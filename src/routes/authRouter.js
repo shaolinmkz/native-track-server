@@ -18,7 +18,7 @@ router.post("/signup", (req, res) => {
       .then(({ email, _id }) => {
 
         const token = jwt.sign({ email, _id }, process.env.SECRET);
-        res.status(200).json({ data: { email, token } });
+        res.status(201).json({ data: { email, token } });
       })
       .catch((error) => {
         res.status(422).json({ error: error.message });
