@@ -6,9 +6,13 @@ const router = Router();
 // Get all tracks
 router.get("/tracks", (req, res) => {
   const Track = mongoose.model("Track");
-  Track.find({ userId: req.user._id }).then((tracks) => {
+  Track.find({ userId: req.user._id })
+  .then((tracks) => {
     res.status(200).json({ data: tracks });
-  });
+  })
+  .catch((error) => {
+    res.status(500).json({ message: "Server error", error: error.message });
+  })
 });
 
 // get single track
@@ -22,8 +26,8 @@ router.get("/tracks/:trackId", (req, res) => {
         res.status(404).json({ message: "Track not found" });
       }
     }
-  ).catch(() => {
-    res.status(500).json({ message: "Server error" });
+  ).catch((error) => {
+    res.status(500).json({ message: "Server error", error: error.message });
   });
 });
 
@@ -40,12 +44,12 @@ router.delete("/tracks/:trackId", (req, res) => {
         .then(() => {
           res.status(200).json({ message: "Deleted successfully" });
         })
-        .catch(() => {
-          res.status(404).json({ message: "An error occurred while deleting this track" });
+        .catch((error) => {
+          res.status(404).json({ message: "An error occurred while deleting this track", error: error.message });
         });
     })
-    .catch(() => {
-      res.status(404).json({ message: "Track not found" });
+    .catch((error) => {
+      res.status(404).json({ message: "Track not found", error: error.message });
     });
 });
 
@@ -60,9 +64,9 @@ router.post("/tracks", (req, res) => {
   } else {
     const track = new Track({ name, locations, userId: req.user._id });
     track.save().then((track) => {
-      res.status(201).json({ data: track });
-    }).catch(() => {
-      res.status(404).json({ message: "An error occurred while creating this track" });
+      res.status(201).json({ data: track, message: 'Track saved successfully' });
+    }).catch((error) => {
+      res.status(500).json({ message: "An error occurred while creating this track", error: error.message });
     });;
   }
 });

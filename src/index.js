@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 const logger = require("morgan");
 const authRoute = require("./routes/authRouter");
 const trackRoute = require("./routes/trackRouter");
-const requireAuth = require("./middlewares/requireAuth");
+const secureRoute = require("./middlewares/secureRoute");
 
 require("./models");
 
@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(authRoute);
-app.use(requireAuth, trackRoute);
+app.use(secureRoute, trackRoute);
 
 app.use("*", (req, res) => {
   res.json({ data: "Not found" });

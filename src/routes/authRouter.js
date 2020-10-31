@@ -2,10 +2,11 @@ const { Router } = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const userExist = require("../middlewares/userExist");
 
 const router = Router();
 
-router.post("/signup", (req, res) => {
+router.post("/signup", userExist, (req, res) => {
   const { email, password } = req.body;
   if(email && password) {
     const saltRounds = 10;
@@ -18,15 +19,14 @@ router.post("/signup", (req, res) => {
       .then(({ email, _id }) => {
 
         const token = jwt.sign({ email, _id }, process.env.SECRET);
-        res.status(201).json({ data: { email, token } });
+        res.status(201).json({ data: { email, token }, message: 'User created successfully' });
       })
       .catch((error) => {
-        res.status(422).json({ error: error.message });
+        res.status(500).json({ message: 'Server error', error: error.message });
       });
     } else {
-      res.status(400).json({ error: 'Must provide email and password' });
+      res.status(400).json({ message: 'Must provide email and password' });
   }
-
 });
 
 router.post("/login", (req, res) => {
@@ -39,16 +39,16 @@ router.post("/login", (req, res) => {
       const isPassword = bcrypt.compareSync(password, hash);
       if(isPassword) {
         const token = jwt.sign({ email, _id }, process.env.SECRET);
-        res.status(200).json({ data: { email, token } });
+        res.status(200).json({ data: { email, token }, message: 'User login successfully' });
       } else {
         res.status(400).json({ message: 'Incorrect email or password' });
       }
     })
     .catch((error) => {
-      res.status(422).json({ message: error.message });
+      res.status(500).json({ message: 'Server error', error: error.message });
     });
   } else {
-    res.status(400).json({ error: 'Must provide email and password' });
+    res.status(400).json({ message: 'Must provide email and password' });
   }
 });
 
