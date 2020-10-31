@@ -41,11 +41,11 @@ router.post("/login", (req, res) => {
         const token = jwt.sign({ email, _id }, process.env.SECRET);
         res.status(200).json({ data: { email, token }, message: 'User login successfully' });
       } else {
-        res.status(400).json({ message: 'Incorrect email or password' });
+        res.status(400).json({ message: 'Invalid email or password' });
       }
     })
     .catch((error) => {
-      res.status(500).json({ message: 'Server error', error: error.message });
+      res.status(400).json({ message: 'Invalid email or password', error: error.message });
     });
   } else {
     res.status(400).json({ message: 'Must provide email and password' });
