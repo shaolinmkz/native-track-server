@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./src",
+    "start": "node ./src",
+    "start:dev": "nodemon ./src",
     "ngrok": "ngrok http 3000"
   },
   "keywords": [],
